@@ -23,13 +23,15 @@
     }
 
     .box {
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(8px);
-      padding: 40px;
-      border-radius: 25px;
-      box-shadow: 0 0 40px rgba(0,0,0,0.3);
-      max-width: 420px;
-      z-index: 2;
+  position: relative;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  padding: 40px;
+  border-radius: 25px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.3);
+  max-width: 420px;
+  z-index: 2;
+}
     }
 
     h1 {
@@ -42,14 +44,11 @@
       margin-bottom: 30px;
     }
 
-    button {
-      font-size: 18px;
-      padding: 12px 28px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      margin: 10px;
-    }
+    <button id="no" 
+        onmouseover="moveNo()" 
+        onclick="wrongChoice()">
+  NO 💔
+</button>
 
     #yes {
       background: white;
@@ -96,48 +95,26 @@
   </audio>
 
   <!-- Floating Hearts -->
-  <script>
-    setInterval(() => {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerHTML = "💖";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
-      document.body.appendChild(heart);
+<script>
+  function moveNo() {
+    const noBtn = document.getElementById("no");
+    const box = document.querySelector(".box");
 
-      setTimeout(() => {
-        heart.remove();
-      }, 7000);
-    }, 300);
-  </script>
+    const boxRect = box.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
 
-  <div class="box">
-    <h1>Hey Hania 💕</h1>
-    <p>Will you be my Valentine? 🌹🥺</p>
+    const maxX = boxRect.width - btnRect.width;
+    const maxY = boxRect.height - btnRect.height;
 
-    <button id="yes" onclick="yesClick()">YES 💖</button>
-    <button id="no" onmouseover="wrongChoice()">WRONG CHOICE 😌</button>
-  </div>
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
 
-  <script>
-    function yesClick() {
-      document.body.innerHTML = `
-        <div style="padding:40px;text-align:center;color:white;">
-          <h1>YAYYY HANIA 😍💘</h1>
-          <p style="font-size:20px;margin-top:20px;">
-            You are the greatest blessing in my life.<br>
-            <strong>I LOVE YOU SO MUCH.</strong><br><br>
-            Cheers to celebrating Valentines together for the rest of our life 💍🌹
-          </p>
-          <p style="margin-top:30px;">— Yours, Zayn 🖤</p>
-        </div>
-      `;
-    }
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  }
 
-    function wrongChoice() {
-      location.reload();
-    }
-  </script>
-
-</body>
-</html>
+  function wrongChoice() {
+    alert("Wrong choice 😌💖 Try again.");
+    location.reload();
+  }
+</script>
