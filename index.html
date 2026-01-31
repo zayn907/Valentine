@@ -9,29 +9,28 @@
       margin: 0;
       height: 100vh;
       background:
-        linear-gradient(rgba(255, 105, 135, 0.6), rgba(180, 70, 200, 0.6)),
+        linear-gradient(rgba(255,105,135,0.6), rgba(180,70,200,0.6)),
         url("IMG_2513.jpeg");
       background-size: cover;
       background-position: center;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
       color: white;
       text-align: center;
       overflow: hidden;
     }
 
     .box {
-  position: relative;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(8px);
-  padding: 40px;
-  border-radius: 25px;
-  box-shadow: 0 0 40px rgba(0,0,0,0.3);
-  max-width: 420px;
-  z-index: 2;
-}
+      position: relative;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      padding: 40px;
+      border-radius: 25px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.3);
+      max-width: 420px;
+      z-index: 2;
     }
 
     h1 {
@@ -44,11 +43,14 @@
       margin-bottom: 30px;
     }
 
-    <button id="no" 
-        onmouseover="moveNo()" 
-        onclick="wrongChoice()">
-  NO 💔
-</button>
+    button {
+      font-size: 18px;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin: 10px;
+    }
 
     #yes {
       background: white;
@@ -60,12 +62,13 @@
       background: rgba(255,255,255,0.7);
       color: #333;
       position: absolute;
+      top: 120px;
+      left: 150px;
     }
 
     /* Floating hearts */
     .heart {
       position: absolute;
-      color: pink;
       font-size: 20px;
       animation: float 6s linear infinite;
       opacity: 0.7;
@@ -76,9 +79,7 @@
         transform: translateY(100vh) scale(0.8);
         opacity: 0;
       }
-      50% {
-        opacity: 1;
-      }
+      50% { opacity: 1; }
       100% {
         transform: translateY(-10vh) scale(1.2);
         opacity: 0;
@@ -94,27 +95,108 @@
     <source src="https://cdn.pixabay.com/download/audio/2022/10/26/audio_40b7f5c1fa.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Floating Hearts -->
-<script>
-  function moveNo() {
-    const noBtn = document.getElementById("no");
-    const box = document.querySelector(".box");
+  <!-- Floating Hearts Script -->
+  <script>
+    // Floating hearts interval (stored so we can stop it later)
+    window.heartInterval = setInterval(() => {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "💖";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 7000);
+    }, 300);
 
-    const boxRect = box.getBoundingClientRect();
-    const btnRect = noBtn.getBoundingClientRect();
+    function moveNo() {
+      const noBtn = document.getElementById("no");
+      const box = document.querySelector(".box");
 
-    const maxX = boxRect.width - btnRect.width;
-    const maxY = boxRect.height - btnRect.height;
+      const maxX = box.clientWidth - noBtn.clientWidth;
+      const maxY = box.clientHeight - noBtn.clientHeight;
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+      noBtn.style.left = Math.random() * maxX + "px";
+      noBtn.style.top = Math.random() * maxY + "px";
+    }
 
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  }
+    function wrongChoice() {
+      alert("Wrong choice 😌💖 Try again.");
+      location.reload();
+    }
 
-  function wrongChoice() {
-    alert("Wrong choice 😌💖 Try again.");
-    location.reload();
-  }
-</script>
+    // YES button click
+    function yesClick() {
+      const box = document.querySelector(".box");
+      box.remove();
+
+      // Stop floating hearts
+      clearInterval(window.heartInterval);
+
+      // Create fireworks
+      createFireworks();
+
+      // Show message after fireworks
+      setTimeout(() => {
+        const message = document.createElement("div");
+        message.style.color = "white";
+        message.style.textAlign = "center";
+        message.style.padding = "40px";
+        message.innerHTML = `
+          <h1>YAYYY HANIA 😍💘</h1>
+          <p style="font-size:20px;">
+            You are the greatest blessing in my life.<br>
+            <strong>I LOVE YOU SO MUCH.</strong><br><br>
+            Cheers to celebrating Valentines together for the rest of our life 💍🌹
+          </p>
+          <p>— Yours, Zayn 🖤</p>
+        `;
+        document.body.appendChild(message);
+      }, 2000);
+    }
+
+    // Fireworks animation
+    function createFireworks() {
+      function spawnFireworks(count) {
+        for (let i = 0; i < count; i++) {
+          const fire = document.createElement("div");
+          fire.innerHTML = "💥";
+          fire.style.position = "absolute";
+          fire.style.left = Math.random() * window.innerWidth + "px";
+          fire.style.top = Math.random() * window.innerHeight + "px";
+          fire.style.fontSize = Math.random() * 40 + 20 + "px";
+          fire.style.opacity = 1;
+          fire.style.transition = "all 1s ease-out";
+          document.body.appendChild(fire);
+
+          setTimeout(() => {
+            fire.style.transform = `translate(${(Math.random()-0.5)*200}px, ${(Math.random()-0.5)*200}px) scale(0.1)`;
+            fire.style.opacity = 0;
+          }, 100);
+
+          setTimeout(() => fire.remove(), 1100);
+        }
+      }
+
+      // Initial fireworks burst
+      spawnFireworks(50);
+
+      // Repeat bursts a few times
+      let repeat = 0;
+      const interval = setInterval(() => {
+        spawnFireworks(30);
+        repeat++;
+        if (repeat > 4) clearInterval(interval);
+      }, 500);
+    }
+  </script>
+
+  <div class="box">
+    <h1>Hey Hania 💕</h1>
+    <p>Will you be my Valentine? 🌹🥺</p>
+
+    <button id="yes" onclick="yesClick()">YES 💖</button>
+    <button id="no" onmouseover="moveNo()" onclick="wrongChoice()">NO 💔</button>
+  </div>
+
+</body>
+</html>
