@@ -98,18 +98,20 @@ const noBtn = document.getElementById("no-button");
 const successMessage = document.getElementById("success-message");
 const container = document.getElementById("main-container");
 
-// Button sizes
+// Sizes
 let yesSize = 1;
 let noSize = 1;
 let noClickCount = 0;
 
-// NO messages
+// NO messages array
 const noMessages = [
   "Wrong choice 😌💖 Try again!",
   "Oops! Not allowed 😏💔",
   "Haha, try pressing YES instead 😘",
   "NO? Really? 💔",
-  "Come on Hania, YES is the right one! 💖"
+  "Come on Hania, YES is the right one! 💖",
+  "Still NO? 🤭",
+  "This is fun, but click YES! 😍"
 ];
 
 // Floating hearts
@@ -128,7 +130,6 @@ yesBtn.addEventListener("click", () => {
   yesSize += 0.1;
   yesBtn.style.transform = `scale(${yesSize})`;
 
-  // Show final Valentine message at threshold
   if (yesSize >= 1.5) {
     showFinalMessage();
   }
@@ -137,23 +138,28 @@ yesBtn.addEventListener("click", () => {
 // NO button click
 noBtn.addEventListener("click", () => {
   noClickCount++;
+  
+  // Shrink NO button
   noSize -= 0.1;
-
-  if (noClickCount < 5) {
-    if (noSize < 0.3) noSize = 0.3;
+  if (noClickCount < 7) {
+    if (noSize < 0.1) noSize = 0.1;
     noBtn.style.transform = `scale(${noSize})`;
+
+    // Show cycling NO messages
     successMessage.innerText = noMessages[(noClickCount - 1) % noMessages.length];
+
+    // YES grows each NO click
+    yesSize += 0.2;
+    yesBtn.style.transform = `scale(${yesSize})`;
   } else {
-    // 5th click: YES covers screen, NO becomes tiny
-    yesBtn.style.transform = `scale(10)`; // huge YES
+    // 7th click: YES covers screen, NO tiny
+    yesBtn.style.transform = `scale(10)`; // HUGE YES
     noBtn.style.transform = `scale(0.1)`; // tiny NO
     noBtn.innerText = "NO 💔";
     successMessage.innerText = "Haha 😏 Okay fine, let's try again!";
     
-    // Add click to tiny NO to reset
-    noBtn.onclick = () => {
-      location.reload(); // restart everything
-    };
+    // Tiny NO resets page
+    noBtn.onclick = () => location.reload();
   }
 });
 
@@ -174,7 +180,7 @@ function showFinalMessage() {
   createFireworks();
 }
 
-// Fireworks
+// Fireworks animation
 function createFireworks() {
   function spawnFireworks(count) {
     for (let i = 0; i < count; i++) {
